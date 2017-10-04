@@ -1,0 +1,117 @@
+---
+title: "Lab_03"
+author: "RStudio AJ"
+date: "October 3, 2017"
+output: html_document
+---
+
+
+##Question 1
+###Part 1
+```{r}
+library(MASS)
+df <- Cars93
+```
+
+###Part 2
+```{r}
+set.seed(60)
+samp1 <- sample(1:nrow(df), 40)
+training <- df[samp1,]
+test <- df[-samp1,]
+```
+
+###Part 3
+```{r}
+write.csv(training, file = 'Training', row.names = FALSE)
+write.csv(test, file = 'Test', row.names = FALSE)
+```
+
+###Part 4
+```{r}
+sum(training$Origin == 'USA')
+sum(training$Origin == 'non-USA')
+```
+
+##Question 2
+###Part 1
+
+```{r}
+births <- sample(c('boy', 'girl'), size = 10, replace = TRUE, prob = c(0.515, 0.485))
+
+table(births)
+```
+
+###Part 2
+```{r}
+
+birthsplus <- sample(c('boy', 'girl'), size = 10000, replace = TRUE, prob = c(0.515, 0.485))
+
+table(birthsplus)
+```
+
+##Question 3
+###Part 1
+```{r}
+boybirths1 <- dbinom(3, size = 10, prob = 0.515)
+
+table(boybirths1)
+```
+
+###Part 2
+```{r}
+boybirths2 <- pbinom(8, size = 10, prob = 0.515)
+
+table(boybirths2)
+```
+
+###Part 3
+```{r}
+boybirths2 <- pbinom(8, size = 10, prob = 0.515)
+
+table(boybirths2)
+```
+
+###Part 4
+```{r}
+n <- 10
+
+x <- 0:n
+
+y <- dbinom(x, size = n, prob = 0.515)
+
+plot(x,y)
+```
+
+###Part 5
+```{r}
+n <- 10
+
+x <- 0:n
+
+y <- pbinom(x, size = n, prob = 0.515)
+
+plot(x,y)
+
+```
+
+
+##Question 4
+###Part 1
+```{r}
+dbinom(4, size = 10, prob = 0.5)
+```
+
+###Part 2
+```{r}
+pbinom(5, size = 10, prob = 0.5, lower.tail = FALSE)
+```
+
+###Part 3
+```{r}
+n <- 10
+x <- 0:20
+y <- dbinom(x, size = 10, 0.5)
+plot(x,y)
+```
+
