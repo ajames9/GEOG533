@@ -1,0 +1,128 @@
+---
+title: "Alyssa James Lab 4"
+output: html_notebook
+---
+    
+
+#Question   1
+##A
+
+```{r}
+pnorm(20, mean = 32, sd = 7)
+
+curve(dnorm(x, mean = 32, sd = 7),  from = 11, to = 53, main = 'Scoring 20 Points or Less')
+
+
+x <- c(11, seq(11, 20, 0.01), 20)
+y <- c(0, dnorm(seq(11, 20, 0.01), mean = 32, sd = 7), 0)
+polygon(x, y, col = 'red')
+
+```
+
+##B
+```{r}
+pnorm(35,mean = 32, sd = 7, lower.tail = FALSE)
+
+curve(dnorm(x, mean = 32, sd = 7), from = 11, to = 53, main = 'Scoring More Than 35 Points')
+
+x <- c(35, seq(35, 53, 0.01), 53)
+y <- c(0, dnorm(seq(35, 53, 0.01), mean = 32, sd = 7), 0)
+polygon(x, y, col = 'red')
+```
+
+##C
+```{r}
+pnorm(40, mean = 32, sd = 7) - pnorm(20, mean = 32, sd = 7)
+
+curve(dnorm(x, mean = 32, sd = 7), from = 11, to = 53, main = 'Scoring Between 20 and 40 Points')
+
+x <- c(20, seq(20, 40, 0.01), 40)
+y <- c(0, dnorm(seq(20, 40, 0.01), mean = 32, sd = 7), 0)
+polygon(x, y , col = 'red')
+```
+
+#Question 2
+##A
+```{r}
+pexp(3, rate = .1, lower.tail = TRUE)
+
+curve(dexp(x, .1), from = -3, to = 3, main = 'Fewer Than 3 Comments')
+
+x <- c(-3, seq(-3, 3, 0.01), 3)
+y <- c(0, dexp(seq(-3, 3, 0.01)), 0)
+polygon(x, y, col = 'pink')
+        
+```
+
+##B
+```{r}
+pexp(20, rate = .1, lower.tail = FALSE)
+
+curve(dexp(x, .1), from = -20, to = 20, main = 'More Than 20 Comments')
+
+x <- c(-20, seq(-20, 20, 0.01), 20)
+y <- c(0, dexp(seq(-20, 20, 0.01)), 0)
+polygon(x, y, col = 'pink')
+```
+
+##C
+```{r}
+pexp(10, rate = .1, lower.tail = TRUE) - pexp(5, rate = .1, lower.tail = TRUE)
+
+curve(dexp(x, .1), from = 5, to = 10, main = 'Between 5 and 10 Comments')
+
+x <- c(5, seq(5, 10, 0.01), 10)
+y <- c(0, dexp(seq(5, 10, 0.01)), 0)
+polygon(x, y, col = 'pink')
+```
+
+#Question 3
+##A
+```{r}
+library(raster)
+
+ras <- raster(nrows = 30, ncol = 30, xmn = 0, xmx = 30, ymn = 0, ymx = 30)
+
+ras[] <- runif(ncell(ras))
+
+plot(ras)
+
+hist(ras)
+```
+
+##B
+```{r}
+ras2 <- raster(nrows = 30, ncol = 30, xmn = 0, xmx = 30, ymn = 0, ymx = 30)
+
+ras2[] <- rnorm(ncell(ras2))
+
+plot(ras2)
+
+hist(ras2)
+```
+
+##C
+```{r}
+ras3 <- merge(ras, ras2)
+
+plot(ras3)
+
+hist(ras3)
+```
+
+##D
+```{r}
+cellStats(ras3, 'mean')
+
+ras3[1,1] <- 0
+
+ras3[ras3 > 0.5] <- 1
+
+ras4 <- ras3 + ras3 * 30
+
+plot(ras4)
+
+writeRaster(ras4, filename = 'Lab4.Tiff', overwrite = TRUE)
+
+```
+
