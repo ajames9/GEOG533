@@ -1,0 +1,248 @@
+---
+title: "Geog533 Lab 8"
+author: "Alyssa James"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+Complete the following exercises in Chapter 8 (Introduction to Regression Analysis) of the textbook [R] pages 247-250. 
+
+## Question 1
+
+This is Exercise 1 in Chapter 8 of the Textbook [R].
+
+A regression of weekly shopping trip frequency on annual income (data entered in thousands of dollars) is performed on data collected from 24 respondents. The results are summarized below:
+
+* Intercept: 0.46
+* Slope: 0.19
+
+|          | Sum of squares  | Degrees of freedom |  Mean square   |       *F*       |
+|----------|-----------------|--------------------|----------------|-----------------|
+|Regression|                 |                    |                |                 |
+| Residual |       1.7       |                    |                |                 |
+| Total    |       2.3       |                    |                |                 |
+
+
+### Question 1(a)
+Fill in the blanks in the ANOVA table.
+
+```{r}
+SSM <- SST - SSR
+SSR <- 1.7
+SST <- 2.3
+m1 <- SSM/1
+m2 <- SSR/22
+F <- m1/m2
+```
+
+
+|          | Sum of squares  | Degrees of freedom |  Mean square   |       *F*       |
+|----------|-----------------|--------------------|----------------|-----------------|
+|Regression|      `r SSM`    |         `r 1`      |       `r m1`   |      `r F`      |
+| Residual |       1.7       |        `r 22`      |       `r m2`   |                 |
+| Total    |       2.3       |        `r 23`      |                |                 |
+
+
+### Question 1(b)
+What is the predicted number of weekly shopping trips for someone making $50,000/year?
+```{r}
+a <- 0.46
+b <- 0.19
+x <- 50000
+y <- a*x + b
+y
+```
+
+
+### Question 1(c)
+In words, what is the meaning of the coefficient 0.19?
+
+For each increase in weekly shopping trips, the predicted annual income will increase by $1900. 
+
+### Question 1(d)
+Is the regression coefficient significantly different from zero? How do you know?
+```{r}
+Fcrit <- qf(0.95, df1 = 1, df2 = 22)
+if(F > Fcrit){
+print("We cannot reject the null hypothesis")
+} else {
+print("We reject the null hypothesis")}
+```
+
+
+
+### Question 1(e)
+What is the value of the correlation coefficient?
+```{r}
+r2 <- SSM/SST
+r <- sqrt(SSM/SST)
+r
+```
+
+
+
+
+
+## Question 2
+
+This is Exercise 6 in Chapter 8 of the Textbook [R].
+
+The following data are collected in an effort to determine whether snowfall is dependent upon elevation: 
+
+| Snowfall (inches) | Elevation (feet) |
+|-------------------|------------------|
+|       36          |       400        |
+|       78          |       800        |
+|       11          |       200        |
+|       45          |       675        |
+
+Using R, show your work on exercises (a) through (g).
+
+### Question 2(a)
+Find the regression coefficients (the intercept and the slope coefficient).
+```{r}
+snowfall <- c(36, 78, 11, 45)
+elevation <- c(400, 800, 200, 675)
+
+m <- lm(elevation ~ snowfall)
+summary(m)
+print("Intercept <- 127.412")
+print("Slope Coefficient <- 9.208")
+```
+
+
+### Question 2(b)
+Estimate the standard error of the residuals about the regression line.
+```{r}
+Rse <- 192.1
+Rse
+```
+
+
+### Question 2(c)
+Test the hypothesis that the regression coefficient associated with the independent variables is equal to zero. Also place a 95% confidence interval on the regression coefficient.
+```{r}
+qf(0.95, df1 = 1, df2 = 6)
+print("We reject the null hypothesis")
+```
+
+
+### Question 2(d)
+Find the value of $r^2$.
+```{r}
+r2 <- 453628/221520
+r2
+```
+
+
+### Question 2(e)
+Make a table of the observed values, predicted values, and the residuals.
+```{r}
+newdf <- data.frame(snowfall, elevation)
+newdf$predicted <- m$fitted.values
+newdf$residuals <- m$residuals
+newdf
+```
+
+
+### Question 2(f)
+Prepare an analysis of variance table portraying the regression results.
+```{r}
+anova(m)
+Sm <- 453628
+Sr <- 221520
+St <- 675148
+df1 <- 1
+df2 <- 2
+m1 <- SSm/df1
+m2 <- SSr/df2
+F2 <- m1/m2
+```
+
+
+|          | Sum of squares  | Degrees of freedom |  Mean square   |       *F*       |
+|----------|-----------------|--------------------|----------------|-----------------|
+|Regression|     `r Sm`      |        `r df1`     |    `r m1`      |      `r F2`     |
+| Residual |     `r Sr`      |        `r df2`     |    `r m2`      |                 |
+| Total    |     `r St`      |                    |                |                 |
+
+### Question 2(g)
+Graph the data and the regression line.
+```{r}
+x <- snowfall
+y <- elevation
+df <- data.frame(x, y)
+plot(y~x, data = df)
+abline(m,col="red",lwd=2)
+segments(x,fitted(m),x,y,col="blue",lty = "dashed")
+```
+
+
+
+
+
+## Question 3
+
+This is Exercise 10 in Chapter 8 of the Textbook [R].
+
+Use R and the [Milwaukee dataset](http://spatial.binghamton.edu/geog533/data/Milwaukee_Sales.csv) to:
+
+### Problem
+perform a regression using sales price as the dependent variable and lot size as the independent variable.
+
+### Solution
+```{r}
+url = "http://spatial.binghamton.edu/geog533/data/Milwaukee_Sales.csv"
+df <- read.csv(file = "Milwaukee_Sales.csv", header = TRUE)
+x <- df$SalePrice
+y <- df$LotSize
+m <- lm(y~x)
+summary(m)
+```
+
+
+
+## Question 4
+
+This is Exercise 11 in Chapter 8 of the Textbook [R].
+
+Use R and the Hypothetical [UK Housing Prices dataset](http://spatial.binghamton.edu/geog533/data/UK_Housing.csv) to:
+
+### Question 4(a) 
+perform a regression using house price as the dependent variable, and number of bedrooms as the independent variable;
+
+```{r}
+url = "http://spatial.binghamton.edu/geog533/data/UK_Housing.csv"
+df <- read.csv(file = "UK_Housing.csv", header = TRUE)
+x <- df$price
+y <- df$bedrooms
+m <- lm(y~x)
+summary(m)
+```
+
+
+### Question 4(b) 
+(b) repeat part (a), using the number of bathrooms as the independent variable, and comment on the results.
+```{r}
+x <- df$price
+y <- df$bathrooms
+m <- lm(y~x)
+summary(m)
+qf(0.95, df1 = 1, df2 = 497)
+print("We reject the null hypothesis")
+```
+
+
+## Question 5
+Download the [hometown.csv](http://spatial.binghamton.edu/geog533/data/hometown.csv), append your name and hometown coordinates to the csv, then use [leaflet](https://rstudio.github.io/leaflet/) to create a web map (10 pt.)
+
+```{r}
+df <- read.csv(file = "hometown.csv", header = TRUE)
+if(!require(leaflet)) {install.packages("leaflet")}
+m <- leaflet(width = "100%")
+addTiles(m)  
+addMarkers(m, lng=-73.737145, lat=40.655969, popup="The birthplace of Alyssa James")
+```
+
