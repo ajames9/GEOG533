@@ -1,6 +1,6 @@
 ---
 title: "Twitter Analytics Using R"
-author: "Dr. Qiusheng Wu"
+author: "Alyssa James"
 output: 
   html_notebook:
     toc: TRUE
